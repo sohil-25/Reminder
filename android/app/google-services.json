@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "911480304758",
+    "project_id": "advance-todo-list",
+    "storage_bucket": "advance-todo-list.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911480304758:android:0bd9c4cda8d3ea582e5b57",
+        "android_client_info": {
+          "package_name": "com.reminder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "911480304758-kppq0cdko3qcjtuh2i50820bs9ohis01.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbUhR30IUHPvfOztlM3D7DyMcTF_SjXh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "911480304758-kppq0cdko3qcjtuh2i50820bs9ohis01.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
