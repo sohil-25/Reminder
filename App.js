@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './src/screens/Home';
 import Login from './src/screens/Login';
 import Map from './src/screens/Map';
+import Camera from './src/screens/Camera';
 import { Provider } from 'react-redux';
 import { Store } from './src/redux/store';
 
@@ -42,6 +42,10 @@ function App() {
           <Stack.Screen
             name="Map"
             component={Map}
+          />
+          <Stack.Screen
+            name="Camera"
+            component={Camera}
           />
         </Stack.Navigator>
       </NavigationContainer>
