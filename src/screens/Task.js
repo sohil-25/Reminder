@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TextInput, Alert} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Alert,Image,ScrollView} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomBtn from '../components/CustomBtn';
 import {useDispatch, useSelector} from 'react-redux';
@@ -9,6 +9,9 @@ import TouchBtn from '../components/TouchBtn';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ModalBell from '../components/modals/ModalBell';
 import PushNotification from "react-native-push-notification";
+import RNFS from 'react-native-fs';
+import { useIsFocused } from '@react-navigation/native';
+
 
 const Task = ({navigation}) => {
   const [title, setTitle] = useState('');
@@ -17,28 +20,30 @@ const Task = ({navigation}) => {
   const [color, setColor] = useState('white');
   const [showModal, setShowModal] = useState(false);
   const [bellTime, setBellTime] = useState('1');
+  const [image, setImage] = useState('');
 
   const {tasks, taskId} = useSelector(state => state.taskReducer);
   const dispatch = useDispatch();
+  const focus=useIsFocused()
 
   useEffect(() => {
-    getData();
-  }, []);
+    getTask();
+  }, [focus]);
 
-  const getData = () => {
+  const getTask = () => {
     const Task = tasks.find(task => task.ID === taskId);
     if (Task) {
       setTitle(Task.Title);
       setDesc(Task.Desc);
       setDone(Task.Done);
       setColor(Task.Color);
+      setImage(Task.Image);
     }
   };
   const setTask = () => {
     if (title.length == 0) {
       Alert.alert('Warning', 'Please write your task title');
     } else {
-      console.log('else');
       try {
         var Task = {
           ID: taskId,
@@ -46,6 +51,7 @@ const Task = ({navigation}) => {
           Desc: desc,
           Done: done,
           Color: color,
+          Image:image
         };
         let newTasks = [];
         const index = tasks.findIndex(task => task.ID === taskId);
@@ -79,7 +85,27 @@ const Task = ({navigation}) => {
     })
   }
 
+  const deleteImage=()=>{
+    RNFS.unlink(image)
+    .then(() => {
+        const index = tasks.findIndex(task => task.ID === taskId);
+        if (index > -1) {
+            let newTasks = [...tasks];
+            newTasks[index].Image = '';
+            AsyncStorage.setItem('Tasks', JSON.stringify(newTasks))
+                .then(() => {
+                    dispatch(setTasks(newTasks));
+                    Alert.alert('Success!', 'Task image is removed.');
+                    getTask();
+                })
+                .catch(err => console.log(err))
+        }
+    })
+    .catch(err => console.log(err))
+  }
+
   return (
+    <ScrollView>
     <View style={styles.body}>
         <ModalBell 
         visible={showModal}
@@ -146,7 +172,27 @@ const Task = ({navigation}) => {
         >
           <FontAwesome5 name="bell" size={25} color={'#ffffff'} />
         </TouchBtn>
+        <TouchBtn style={styles.extra_button}
+        onPress={()=>{navigation.navigate('Camera',{id:taskId})}}
+        >
+          <FontAwesome5 name="camera" size={25} color={'#ffffff'} />
+        </TouchBtn>
       </View>
+      
+        {image?
+          <View>
+          <Image
+          style={styles.image}
+          source={{uri:image}}
+          />
+          <TouchBtn style={styles.delete_btn}
+        onPress={()=>{deleteImage()}}
+        >
+          <FontAwesome5 name="trash" size={25} color={'#ff3636'} />
+        </TouchBtn>
+          </View>
+          :null
+        }
       <View style={styles.checkbox}>
         <CheckBox value={done} onValueChange={() => setDone(!done)} />
         <Text style={styles.text}>Is Done</Text>
@@ -158,6 +204,7 @@ const Task = ({navigation}) => {
         onPressFunction={setTask}
       />
     </View>
+    </ScrollView>
   );
 };
 
@@ -236,4 +283,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  image:{
+    width:300,
+    height:300,
+    margin:20,
+  },
+  delete_btn:{
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    backgroundColor: '#ffffff80',
+    margin: 10,
+    borderRadius: 5,
+  }
 });
