@@ -8,4 +8,7 @@ export default StyleSheet.create({
     CustomFontHW:{
         fontFamily:FONTS.INDIE
     },
+    CustomFontABRI:{
+        fontFamily:FONTS.REGULAR
+    }
 })
