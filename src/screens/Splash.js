@@ -16,9 +16,6 @@ export default function Splash({ navigation }) {
 
     useEffect(() => {
         createChannels();
-        setTimeout(() => {
-            navigation.replace("My Tasks")
-        },5000);
     }, []);
 
     const createChannels = () => {
@@ -32,12 +29,11 @@ export default function Splash({ navigation }) {
 
     return (
         <View style={styles.body} >
-            {/* <Image
-            style={styles.logo}
-            resizeMode='cover'
-            source={IMAGES.SPLASH_IMG}
-            /> */}
-            <LottieView source={ANIM.SPLASH_ANIM} autoPlay loop />
+            <LottieView source={ANIM.SPLASH_ANIM} 
+             autoPlay
+             loop={false}
+             onAnimationFinish={()=>navigation.navigate('My Tasks')} 
+             />
             <Text style={[
                 GlobalStyle.CustomFontABRI
                 ,styles.text]}>
